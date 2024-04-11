@@ -22,6 +22,8 @@
     <script>
       const contentImages = document.getElementById("content_images");
 
+      const retake = () => (location.href = "./index.html");
+
       if (sessionStorage.getItem("face")) {
         const img = sessionStorage.getItem("face");
         const imgElement = document.createElement("img");
