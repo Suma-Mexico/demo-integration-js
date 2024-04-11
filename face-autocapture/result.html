@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Face autocapture JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/main.css" />
+  </head>
+  <body>
+    <div class="content_title">
+      <p><strong>Resultado</strong></p>
+    </div>
+    <div id="content_images"></div>
+    <div class="content_buttons" style="display: block">
+      <button type="button" onclick="retake()">Tomar de nuevo</button>
+    </div>
+    <footer style="bottom: 30px">
+      <h3>Prueba de autocaptura del rostro</h3>
+      <p>Suma Mexico 2024 | VDID SDK V5.2.3</p>
+    </footer>
+
+    <script>
+      const contentImages = document.getElementById("content_images");
+
+      if (sessionStorage.getItem("face")) {
+        const img = sessionStorage.getItem("face");
+        const imgElement = document.createElement("img");
+        contentImages.appendChild(imgElement);
+
+        imgElement.src = `data:image/jpeg;base64,${img}`;
+        imgElement.style.width = "380px";
+        imgElement.style.height = "250px";
+        imgElement.style.objectFit = "cover";
+        imgElement.alt = "Imagen";
+        imgElement.style.borderRadius = "10px";
+      } else {
+        // Si no existe una imagen almacenada, se muestra un mensaje de error
+        const p = document.createElement("p");
+        const content = document.createTextNode("Hubo un error al obtener los datos");
+        p.appendChild(content);
+        contentImages.appendChild(p);
+      }
+    </script>
+  </body>
+</html>
