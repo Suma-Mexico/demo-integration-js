@@ -1,8 +1,13 @@
 # Integración y Pruebas de face_autocapture.min.js
 
+> ### 🚨 Nota Importante
+>
+> Desde la versión 5.2.9 se agrego la traducción ingles y español para las instrucciones en el proceso de autocaptura.
+> [Ver detalles](#language)
+
 ## Descripción
 
-El archivo `face_autocapture.min.js` es un componente desarrollado con Vite y Preact que facilita la autocaptura de rostros utilizando una cámara web. Este componente ofrece la funcionalidad de detectar un rostro a través de un proceso de prueba de vida, capturar su imagen y detectar posibles errores durante el proceso. Este método de prueba de vida implica que la persona debe acercar su iris para validar que está llevando a cabo el proceso de manera auténtica.
+El archivo `face_autocapture.min.js` es un componente desarrollado con Vite y Preact que facilita la autocaptura de rostros utilizando una cámara web. Este componente ofrece la funcionalidad de detectar un rostro a través de un proceso de prueba de vida activa, capturar su imagen y detectar posibles errores durante el proceso. Este método de prueba de vida implica que la persona debe acercar su iris para validar que está llevando a cabo el proceso de manera auténtica.
 
 ## Requisitos Previos
 
@@ -13,7 +18,6 @@ Antes de integrar y probar `face_autocapture.min.js`, asegúrate de tener instal
 Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos:
 
 1. Descarga `face_autocapture.min.js` proporcionado junto con esta documentación.
-   
 2. Coloca `face_autocapture.min.js` en una carpeta llamada "assets" en la raíz de tu proyecto.
 
 3. Agrega el siguiente código al archivo HTML donde deseas incluir el componente de autocaptura:
@@ -58,6 +62,54 @@ Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos 
 
 > **Nota:** La carpeta "assets" es solo una referencia para la organización del proyecto. El archivo puede estar en cualquier ubicación junto con el HTML.
 
+## <a id="language"></a>Nueva Característica de Idioma ⚙️
+
+A partir de la versión 5.2.9, se ha agregado una nueva característica que permite mostrar las instrucciones en español o inglés. Para aprovechar esta funcionalidad, es necesario integrar el archivo JavaScript correspondiente a esta versión y configurar el idioma deseado mediante el atributo `data-language` en el componente de autocaptura.
+
+### Instrucciones para Implementar la Nueva Característica
+
+1. **Integración del Archivo JavaScript**:
+   Asegúrate de incluir el archivo JavaScript de la versión 5.2.9 en tu proyecto. Este archivo contiene las actualizaciones necesarias para habilitar la traducción de instrucciones.
+
+2. **Configuración del Idioma**:
+   Utiliza el atributo `data-language` en el componente de autocaptura para especificar el idioma de las instrucciones. Solo se permiten dos opciones: `es` para español y `en` para inglés.
+
+   ```html
+   <!-- Contenedor donde se mostrará el componente de autocaptura -->
+   <div>
+     <div id="face_autocapture" data-language="en"></div>
+   </div>
+   ```
+
+3. **Idioma por Defecto**:
+   Si no se incluye el atributo `data-language`, el idioma predeterminado será español (`es`). Es importante añadir explícitamente este atributo para asegurar que las instrucciones se muestren en el idioma deseado.
+
+#### Ejemplo de Implementación
+
+Para mostrar las instrucciones en inglés, asegúrate de agregar `data-language="en"` como se muestra a continuación:
+
+```html
+<!-- Contenedor donde se mostrará el componente de autocaptura -->
+<div>
+  <div id="face_autocapture" data-language="en"></div>
+</div>
+```
+
+Si prefieres las instrucciones en español, puedes omitir el atributo o especificar `data-language="es"`:
+
+```html
+<!-- Contenedor donde se mostrará el componente de autocaptura -->
+<div>
+  <div id="face_autocapture" data-language="es"></div>
+</div>
+```
+
+> ### Notas importantes 📢
+>
+> - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de > utilizar únicamente estos valores.
+>- **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
+>- **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
+
 ## Pruebas
 
 Para probar face_autocapture.min.js en el proyecto de prueba proporcionado por SUMA México, sigue estos pasos:
@@ -74,7 +126,7 @@ Para probar face_autocapture.min.js en el proyecto de prueba proporcionado por S
 
 Si necesitas utilizar un puerto o host diferente al predeterminado (puerto 3000 y localhost), podrías enfrentar problemas de CORS (Cross-Origin Resource Sharing). Antes de realizar pruebas con configuraciones personalizadas, te recomendamos comunicarte con el equipo de soporte técnico para obtener asistencia.
 
-## Nota Importante
+## Nota Importante ❗
 
 Recuerda que face_autocapture.min.js es una versión compilada y minificada del código fuente original. Si necesitas realizar modificaciones o agregar nuevas funcionalidades, contacta al equipo de soporte técnico de SUMA México.
 

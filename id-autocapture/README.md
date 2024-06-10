@@ -1,5 +1,10 @@
 # Integración y Pruebas de autocapture.min.js
 
+> ### 🚨 Nota Importante
+>
+> Desde la versión 5.2.9 se agrego la traducción ingles y español para las instrucciones en el proceso de autocaptura.
+> [Ver detalles](#language)
+
 ## Descripción
 
 El archivo `autocapture.min.js` es un componente desarrollado con Vite y Preact que simplifica la captura de documentos mediante el uso de una cámara web. Este componente ofrece la capacidad de detectar documentos de identidad, capturar imágenes y identificar posibles errores durante el proceso. Destacando su función clave, el componente cuenta con una característica denominada continueDetection, que permite la captura múltiple de documentos. Esta función mejora significativamente la experiencia de los usuarios al reducir problemas de captura y asegurar la calidad de las imágenes obtenidas, evitando así posibles desenfoques.
@@ -58,6 +63,54 @@ Para integrar `autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos
 
 > **Nota:** La carpeta "assets" es solo una referencia para la organización del proyecto. El archivo puede estar en cualquier ubicación junto con el HTML.
 
+## <a id="language"></a>Nueva Característica de Idioma ⚙️
+
+A partir de la versión 5.2.9, se ha agregado una nueva característica que permite mostrar las instrucciones en español o inglés. Para aprovechar esta funcionalidad, es necesario integrar el archivo JavaScript correspondiente a esta versión y configurar el idioma deseado mediante el atributo `data-language` en el componente de autocaptura.
+
+### Instrucciones para Implementar la Nueva Característica
+
+1. **Integración del Archivo JavaScript**:
+   Asegúrate de incluir el archivo JavaScript de la versión 5.2.9 en tu proyecto. Este archivo contiene las actualizaciones necesarias para habilitar la traducción de instrucciones.
+
+2. **Configuración del Idioma**:
+   Utiliza el atributo `data-language` en el componente de autocaptura para especificar el idioma de las instrucciones. Solo se permiten dos opciones: `es` para español y `en` para inglés.
+
+   ```html
+   <!-- Contenedor donde se mostrará el componente de autocaptura -->
+   <div>
+     <div id="autocapture_documents" data-language="en"></div>
+   </div>
+   ```
+
+3. **Idioma por Defecto**:
+   Si no se incluye el atributo `data-language`, el idioma predeterminado será español (`es`). Es importante añadir explícitamente este atributo para asegurar que las instrucciones se muestren en el idioma deseado.
+
+### Ejemplo de Implementación
+
+Para mostrar las instrucciones en inglés, asegúrate de agregar `data-language="en"` como se muestra a continuación:
+
+```html
+<!-- Contenedor donde se mostrará el componente de autocaptura -->
+<div>
+  <div id="autocapture_documents" data-language="en"></div>
+</div>
+```
+
+Si prefieres las instrucciones en español, puedes omitir el atributo o especificar `data-language="es"`:
+
+```html
+<!-- Contenedor donde se mostrará el componente de autocaptura -->
+<div>
+  <div id="autocapture_documents" data-language="es"></div>
+</div>
+```
+
+> ### Notas importantes 📢
+>
+> - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de > utilizar únicamente estos valores.
+>- **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
+>- **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
+
 ## Pruebas
 
 Para probar autocapture.min.js en el proyecto de prueba proporcionado por SUMA México, sigue estos pasos:
@@ -74,7 +127,7 @@ Para probar autocapture.min.js en el proyecto de prueba proporcionado por SUMA M
 
 Si necesitas utilizar un puerto o host diferente al predeterminado (puerto 3000 y localhost), podrías enfrentar problemas de CORS (Cross-Origin Resource Sharing). Antes de realizar pruebas con configuraciones personalizadas, te recomendamos comunicarte con el equipo de soporte técnico para obtener asistencia.
 
-## Nota Importante
+## Nota Importante ❗
 
 Recuerda que autocapture.min.js es una versión compilada y minificada del código fuente original. Si necesitas realizar modificaciones o agregar nuevas funcionalidades, contacta al equipo de soporte técnico de SUMA México.
 
