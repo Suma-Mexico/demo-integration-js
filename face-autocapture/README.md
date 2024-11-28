@@ -1,19 +1,29 @@
 # Integración y Pruebas de face_autocapture.min.js
 
+**Índice**
+
+1. [Descripción](#description)
+2. [Requisitos previos](#requirements)
+3. [Integración](#integration)
+4. [Pruebas](#testing)
+5. [Nota Importante](#notice)
+6. [Conclusiones](#conclusions)
+7. [Registro de cambios](#changelog)
+
 > ### 🚨 Nota Importante
 >
 > Desde la versión 5.2.9 se agrego la traducción ingles y español para las instrucciones en el proceso de autocaptura.
 > [Ver detalles](#language)
 
-## Descripción
+## <a id="description"></a>1. Descripción
 
 El archivo `face_autocapture.min.js` es un componente desarrollado con Vite y Preact que facilita la autocaptura de rostros utilizando una cámara web. Este componente ofrece la funcionalidad de detectar un rostro a través de un proceso de prueba de vida activa, capturar su imagen y detectar posibles errores durante el proceso. Este método de prueba de vida implica que la persona debe acercar su iris para validar que está llevando a cabo el proceso de manera auténtica.
 
-## Requisitos Previos
+## <a id="requirements"></a>2. Requisitos Previos
 
 Antes de integrar y probar `face_autocapture.min.js`, asegúrate de tener instalada la extensión "Live Server" en Visual Studio Code. Esto te permitirá ejecutar el proyecto en un servidor local. Es necesario configurar Live Server para utilizar el puerto 3000 y el host "localhost".
 
-## Integración
+## <a id="integration"></a>3. Integración
 
 Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos:
 
@@ -69,7 +79,7 @@ A partir de la versión 5.2.9, se ha agregado una nueva característica que perm
 ### Instrucciones para Implementar la Nueva Característica
 
 1. **Integración del Archivo JavaScript**:
-   Asegúrate de incluir el archivo JavaScript de la versión 5.2.9 en tu proyecto. Este archivo contiene las actualizaciones necesarias para habilitar la traducción de instrucciones.
+   Asegúrate de incluir el archivo JavaScript de la versión 5.2.9 o superior en tu proyecto. Este archivo contiene las actualizaciones necesarias para habilitar la traducción de instrucciones.
 
 2. **Configuración del Idioma**:
    Utiliza el atributo `data-language` en el componente de autocaptura para especificar el idioma de las instrucciones. Solo se permiten dos opciones: `es` para español y `en` para inglés.
@@ -106,11 +116,11 @@ Si prefieres las instrucciones en español, puedes omitir el atributo o especifi
 
 > ### Notas importantes 📢
 >
-> - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de > utilizar únicamente estos valores.
+> - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de utilizar únicamente estos valores.
 >- **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
 >- **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
 
-## Pruebas
+## <a id="testing"></a>4. Pruebas
 
 Para probar face_autocapture.min.js en el proyecto de prueba proporcionado por SUMA México, sigue estos pasos:
 
@@ -126,12 +136,27 @@ Para probar face_autocapture.min.js en el proyecto de prueba proporcionado por S
 
 Si necesitas utilizar un puerto o host diferente al predeterminado (puerto 3000 y localhost), podrías enfrentar problemas de CORS (Cross-Origin Resource Sharing). Antes de realizar pruebas con configuraciones personalizadas, te recomendamos comunicarte con el equipo de soporte técnico para obtener asistencia.
 
-## Nota Importante ❗
+## <a id="notice"></a>5. Nota Importante ❗
 
 Recuerda que face_autocapture.min.js es una versión compilada y minificada del código fuente original. Si necesitas realizar modificaciones o agregar nuevas funcionalidades, contacta al equipo de soporte técnico de SUMA México.
 
-## Conclusiones
+## <a id="conclusions"></a>6. Conclusiones
 
 Con la integración y pruebas de face_autocapture.min.js en tu proyecto utilizando "Live Server" en el puerto 3000 y el host "localhost", podrás validar el funcionamiento del componente de autocaptura de rostros y asegurarte de que se adapte correctamente a tu aplicación web.
 
 Esperamos que esta documentación te sea útil para integrar y probar el componente de autocaptura de rostros en tu proyecto. Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.
+
+## <a id="changelog"></a>Registro de cambios
+
+### Cambios
+
+- Detección mejorada del tamaño de la cara.
+- Mejora de las medidas de seguridad y una mayor protección contra las vulnerabilidades.
+
+### Corrección
+
+- Solicitud de permiso de cámara innecesaria al tomar la foto.
+- Inicialización de la cámara en iOS, cuando se utilizan varios componentes en la misma página.
+- Error al cambiar entre cámaras en dispositivos Android.
+- Imagen incorrecta en la llamada de retorno onPhotoTaken.
+- Corrección de la sobreescritura de la imagen central por la última.
