@@ -10,7 +10,7 @@
 6. [Conclusiones](#conclusions)
 7. [Registro de cambios](#changelog)
 
-> ### 🚨 Nota Importante
+> [!NOTE]
 >
 > Desde la versión 5.2.9 se agrego la traducción ingles y español para las instrucciones en el proceso de autocaptura.
 > [Ver detalles](#language)
@@ -21,16 +21,48 @@ El archivo `face_autocapture.min.js` es un componente desarrollado con Vite y Pr
 
 ## <a id="requirements"></a>2. Requisitos Previos
 
-Antes de integrar y probar `face_autocapture.min.js`, asegúrate de tener instalada la extensión "Live Server" en Visual Studio Code. Esto te permitirá ejecutar el proyecto en un servidor local. Es necesario configurar Live Server para utilizar el puerto 3000 y el host "localhost".
+### 2.1. Para versiones anteriores a 7.0.0
+
+Antes de integrar y probar `face_autocapture.min.js`, asegúrate de tener instalada la extensión **Live Server** en Visual Studio Code.
+
+Esto te permitirá ejecutar el proyecto en un servidor local, lo cual es necesario debido a restricciones CORS en versiones anteriores.
+
+**Configuración requerida:**
+
+- Puerto: `3000`
+- Host: `localhost`
+
+> [!IMPORTANT]
+>
+> Esta configuración específica (`localhost:3000`) garantiza el correcto funcionamiento de los componentes en versiones antiguas.
+
+### 2.2. Para la versión 7.0.0
+
+Con la nueva versión `7.0.0`, ya no es necesario configurar Live Server en un puerto o host específico. Puedes utilizar cualquier puerto disponible en tu entorno de desarrollo.
+
+Es necesario utilizar un servidor que permita servir archivos `.wasm` con el tipo MIME adecuado. Recomendamos utilizar [serve](https://www.npmjs.com/package/serve), una herramienta ligera y rápida.
+
+**Lo esencial es asegurarse de:**
+
+- Alojar correctamente la carpeta `dot-assets`.
+- Alojar correctamente los archivos `.js` provistos en el release.
+- No modificar ni alterar el contenido de `dot-assets`.
+
+> [!IMPORTANT]
+>
+> Al alojar localmente todos los recursos, se eliminan las restricciones de origen cruzado (CORS) y se garantiza una carga estable de los componentes.
 
 ## <a id="integration"></a>3. Integración
 
 Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos:
 
-1. Descarga `face_autocapture.min.js` proporcionado junto con esta documentación.
-2. Coloca `face_autocapture.min.js` en una carpeta llamada "assets" en la raíz de tu proyecto.
+1. Descarga `face_autocapture.min.js` pdesde el último release publicado.
 
-3. Agrega el siguiente código al archivo HTML donde deseas incluir el componente de autocaptura:
+2. Descarga la carpeta `dot-assets` desde el último release publicado.
+
+3. Coloca `face_autocapture.min.js` y la carpeta `dot-assets` en una carpeta llamada "assets" en la raíz de tu proyecto.
+
+4. Agrega el siguiente código al archivo HTML donde deseas incluir el componente de autocaptura:
 
 ```html
 <!DOCTYPE html>
@@ -70,7 +102,9 @@ Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos 
 </html>
 ```
 
-> **Nota:** La carpeta "assets" es solo una referencia para la organización del proyecto. El archivo puede estar en cualquier ubicación junto con el HTML.
+> [!NOTE]
+>
+> La carpeta "assets" es solo una referencia para la organización del proyecto. El archivo puede estar en cualquier ubicación junto con el HTML.
 
 ## <a id="language"></a>Nueva Característica de Idioma ⚙️
 
@@ -117,43 +151,97 @@ Si prefieres las instrucciones en español, puedes omitir el atributo o especifi
 > ### Notas importantes 📢
 >
 > - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de utilizar únicamente estos valores.
->- **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
->- **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
+>
+> - **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
+>
+> - **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
 
 ## <a id="testing"></a>4. Pruebas
 
-Para probar face_autocapture.min.js en el proyecto de prueba proporcionado por SUMA México, sigue estos pasos:
+### 4.1. Para versiones anteriores a 7.0.0
 
-1. Abre Visual Studio Code y asegúrate de tener instalada y configurada la extensión "Live Server".
+Para probar `face_autocapture.min.js` en el proyecto de prueba proporcionado por SUMA México, sigue estos pasos:
 
-2. Abre el proyecto y haz clic derecho en el archivo index.html, luego selecciona "Open with Live Server". Esto iniciará el servidor local en el puerto 3000 y utilizará el host "localhost".
+1. Abre Visual Studio Code y asegúrate de tener instalada la extensión Live Server.
 
-3. Una vez que el servidor local esté en funcionamiento, abre tu navegador web y navega a la dirección "http://localhost:3000".
+2. Abre el proyecto y haz clic derecho en el archivo index.html, selecciona "Open with Live Server".
 
-4. Deberías ver el componente de autocaptura en tu página web. Utiliza la cámara web para capturar una imagen de tu rostro y observa los resultados. Si se captura la imagen exitosamente, se mostrará un nuevo archivo HTML con el contenido de la imagen. Si ocurre algún error durante el proceso, se mostrará el mensaje de error.
+3. Configura Live Server para usar:
+
+- Puerto: 3000
+- Host: localhost
+
+4. Abre el navegador en la dirección: http://localhost:3000.
+
+5. Verás el componente de autocaptura funcionando. Podrás capturar imágenes y validar el flujo completo.
+
+> [!NOTE]
+>
+> El uso de `localhost:3000` es obligatorio en versiones anteriores debido a restricciones de CORS.
+> Cambiar el puerto o el host podría generar errores de origen cruzado.
+
+### 4.2. Para la versión 7.0.0
+
+A partir de la versión 7.0.0. No es necesario usar un puerto o host específico. Puedes ejecutar el proyecto en cualquier puerto disponible sin problemas de CORS.
+
+Para las pruebas recomendamos el uso de `serve`, un servidor que permite cargar los archivos `.wasm` con tipo MIME `application/wasm` y asegurar el correcto funcionamiento de los componentes.
+
+> [!WARNING]
+>
+> Herramientas como "Live Server" pueden no configurarlo automáticamente, lo que provoca errores de carga.
+
+#### Instalación y uso
+
+No es necesario instalar nada permanentemente. Solo abre tu terminal en la raíz del proyecto y ejecuta:
+
+```bash
+npx serve .
+```
+
+Esto iniciará un servidor local y te proporcionará una URL (por ejemplo, `http://localhost:3000`) donde podrás acceder a tu proyecto.
+
+Solo asegúrate de:
+
+- Alojar correctamente los archivos `.js`.
+- Mantener la carpeta `dot-assets/` intacta y accesible.
+
+Con esta nueva versión, los componentes funcionan de manera local eliminando la necesidad de configuraciones especiales de servidor.
 
 ## Pruebas con Otros Puertos o Hosts
 
-Si necesitas utilizar un puerto o host diferente al predeterminado (puerto 3000 y localhost), podrías enfrentar problemas de CORS (Cross-Origin Resource Sharing). Antes de realizar pruebas con configuraciones personalizadas, te recomendamos comunicarte con el equipo de soporte técnico para obtener asistencia.
+- En versiones anteriores a 7.0.0, cambiar el puerto o el host puede causar fallos. Cualquier cambio de puerto o host diferente al predeterminado (`3000 y localhost`), se debe comunicarte con el equipo de soporte técnico para obtener asistencia.
 
-## <a id="notice"></a>5. Nota Importante ❗
+- En versiones 7.0.0 o superiores, no existen restricciones en el puerto o dominio de ejecución.
+
+## <a id="notice"></a>📢 5. Nota Importante
 
 Recuerda que face_autocapture.min.js es una versión compilada y minificada del código fuente original. Si necesitas realizar modificaciones o agregar nuevas funcionalidades, contacta al equipo de soporte técnico de SUMA México.
 
 ## <a id="conclusions"></a>6. Conclusiones
 
-Con la integración y pruebas de face_autocapture.min.js en tu proyecto utilizando "Live Server" en el puerto 3000 y el host "localhost", podrás validar el funcionamiento del componente de autocaptura de rostros y asegurarte de que se adapte correctamente a tu aplicación web.
-
 Esperamos que esta documentación te sea útil para integrar y probar el componente de autocaptura de rostros en tu proyecto. Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.
 
 ## <a id="changelog"></a>Registro de cambios
 
-### Cambios
+### 7.0.0 - 28/04/2025
+
+#### Cambios
+
+- Mejora en la detección de rostros.
+- Cambio en la forma de alojar los archivos esenciales para la inicialización de los componente de autocaptura.
+
+#### Correcciones
+
+- Reinicio involuntario de componentes al enfocar.
+
+### 6.2.0 - 28/11/2024
+
+#### Cambios
 
 - Detección mejorada del tamaño de la cara.
 - Mejora de las medidas de seguridad y una mayor protección contra las vulnerabilidades.
 
-### Corrección
+#### Correcciones
 
 - Solicitud de permiso de cámara innecesaria al tomar la foto.
 - Inicialización de la cámara en iOS, cuando se utilizan varios componentes en la misma página.
