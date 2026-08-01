@@ -17,7 +17,35 @@
 
 ## <a id="description"></a>1. Descripción
 
-El archivo `face_autocapture.min.js` es un componente desarrollado con Vite y Preact que facilita la autocaptura de rostros utilizando una cámara web. Este componente ofrece la funcionalidad de detectar un rostro a través de un proceso de prueba de vida activa, capturar su imagen y detectar posibles errores durante el proceso. Este método de prueba de vida implica que la persona debe acercar su iris para validar que está llevando a cabo el proceso de manera auténtica.
+El archivo `face_autocapture.min.js` es un componente frontend desarrollado con Vite y Preact que facilita la autocaptura de rostros utilizando la cámara del dispositivo.
+
+El componente permite:
+
+- Detectar un rostro durante el proceso de captura.
+- Guiar al usuario mediante un flujo.
+- Validar las condiciones necesarias para obtener una captura adecuada.
+- Obtener la imagen del rostro capturado.
+- Reportar errores ocurridos durante el proceso.
+
+Durante la prueba de vida activa, el usuario deberá acercar su iris a la cámara cuando el componente lo indique, con el fin de comprobar que la captura está siendo realizada por una persona presente durante el proceso.
+
+El componente devuelve el resultado de la captura mediante eventos para que la aplicación integradora gestione el procesamiento posterior que requiera.
+
+---
+
+### Alcance del componente
+
+`face_autocapture.min.js` únicamente es responsable de la captura guiada del rostro y de la ejecución del flujo de prueba de vida activa necesario para obtener la imagen.
+
+El componente **no realiza directamente**:
+
+- Verificación de identidad.
+- Comparación biométrica facial.
+- Validación contra servicios externos.
+- Autenticación de usuarios.
+- Aprobación o rechazo de una identidad.
+
+Si la aplicación requiere realizar procesos de verificación de identidad, la imagen obtenida deberá enviarse posteriormente al servicio correspondiente mediante las APIs disponibles en **SUMA**.
 
 ## <a id="requirements"></a>2. Requisitos Previos
 
@@ -35,6 +63,8 @@ Esto te permitirá ejecutar el proyecto en un servidor local, lo cual es necesar
 > [!IMPORTANT]
 >
 > Esta configuración específica (`localhost:3000`) garantiza el correcto funcionamiento de los componentes en versiones antiguas.
+
+---
 
 ### 2.2. Para la versión 7.0.0
 
@@ -54,6 +84,8 @@ Es necesario utilizar un servidor que permita servir archivos `.wasm` con el tip
 
 ## <a id="integration"></a>3. Integración
 
+### 3.1. Recursos necesarios
+
 Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos:
 
 1. Descarga `face_autocapture.min.js` pdesde el último release publicado.
@@ -62,7 +94,29 @@ Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos 
 
 3. Coloca `face_autocapture.min.js` y la carpeta `dot-assets` en una carpeta llamada "assets" en la raíz de tu proyecto.
 
-4. Agrega el siguiente código al archivo HTML donde deseas incluir el componente de autocaptura:
+> [!NOTE]
+>
+> La carpeta `assets` utilizada en los ejemplos es únicamente una referencia para la organización del proyecto. Puedes alojar los archivos en cualquier ubicación, siempre que las rutas configuradas en tu aplicación sean correctas.
+
+---
+
+### 3.2. Autenticación
+
+El componente `face_autocapture.min.js` no requiere un token de autenticación para ejecutarse en el navegador.
+
+Su funcionamiento es completamente local durante el proceso de captura y únicamente devuelve las imágenes obtenidas mediante eventos.
+
+Si la aplicación necesita realizar procesos posteriores, como validación de documentos de identidad, la autenticación o credenciales necesarias corresponden exclusivamente a los servicios externos consumidos por la aplicación integradora.
+
+> [!IMPORTANT]
+>
+> `face_autocapture.min.js` no realiza validaciones contra servicios externos ni consume APIs de verificación de identidad. Su única responsabilidad es la captura guiada del rostro.
+
+---
+
+### 3.3. Integración básica
+
+Una vez disponibles los archivos requeridos, agrega el componente al documento HTML.
 
 ```html
 <!DOCTYPE html>
@@ -72,7 +126,11 @@ Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Face Autocapture JS</title>
     <!--Carga del archivo Javascript que contiene el componente de autocaptura-->
-    <script type="module" crossorigin src="./assets/js/face_autocapture.min.js"></script>
+    <script
+      type="module"
+      crossorigin
+      src="./assets/js/face_autocapture.min.js"
+    ></script>
   </head>
   <body>
     <!--Contenedor donde se mostrará el componente de autocaptura-->
@@ -102,9 +160,24 @@ Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos 
 </html>
 ```
 
-> [!NOTE]
->
-> La carpeta "assets" es solo una referencia para la organización del proyecto. El archivo puede estar en cualquier ubicación junto con el HTML.
+---
+
+### 3.4. Flujo posterior a la captura
+
+Una vez completada la captura, el componente envía el resultado mediante el evento `message`.
+
+```js
+window.addEventListener("message", function (event) {
+  if (event.data.image) console.log(image);
+  if (event.data.error) console.error(event.data.error);
+});
+```
+
+La propiedad `event.data.image` contiene la imagen generada durante la captura.
+
+A partir de este momento, corresponde a la aplicación integradora decidir cómo utilizar la imagen obtenida. Enviando a las APIs de **[SUMA](https://documenter.getpostman.com/view/13807324/UVXgNJ4f#f21f8454-b025-47cb-b320-2154d044dcc0)** para su procesamiento.
+
+---
 
 ## <a id="language"></a>Nueva Característica de Idioma ⚙️
 
@@ -151,9 +224,7 @@ Si prefieres las instrucciones en español, puedes omitir el atributo o especifi
 > ### Notas importantes 📢
 >
 > - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de utilizar únicamente estos valores.
->
 > - **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
->
 > - **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
 
 ## <a id="testing"></a>4. Pruebas
@@ -179,6 +250,8 @@ Para probar `face_autocapture.min.js` en el proyecto de prueba proporcionado por
 >
 > El uso de `localhost:3000` es obligatorio en versiones anteriores debido a restricciones de CORS.
 > Cambiar el puerto o el host podría generar errores de origen cruzado.
+
+---
 
 ### 4.2. Para la versión 7.0.0
 
@@ -222,6 +295,14 @@ Recuerda que face_autocapture.min.js es una versión compilada y minificada del 
 Esperamos que esta documentación te sea útil para integrar y probar el componente de autocaptura de rostros en tu proyecto. Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.
 
 ## <a id="changelog"></a>Registro de cambios
+
+### 7.0.0 - 31/07/2026
+
+#### Cambios
+
+- Se agregó aclaración del alcance de `face_autocapture.min.js`.
+- Se especificó que el componente únicamente realiza captura del rostro y entrega la imagen obtenida mediante eventos.
+- Se agregó referencia al flujo posterior a la captura para evitar confusión entre captura y validación.
 
 ### 7.0.0 - 28/04/2025
 
