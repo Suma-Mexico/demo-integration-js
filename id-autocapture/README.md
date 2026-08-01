@@ -17,7 +17,33 @@
 
 ## <a id="description"></a>1. Descripción
 
-El archivo `autocapture.min.js` es un componente desarrollado con Vite y Preact que simplifica la captura de documentos mediante el uso de una cámara web. Este componente ofrece la capacidad de detectar documentos de identidad, capturar imágenes y identificar posibles errores durante el proceso. Destacando su función clave, el componente cuenta con una característica denominada continueDetection, que permite la captura múltiple de documentos. Esta función mejora significativamente la experiencia de los usuarios al reducir problemas de captura y asegurar la calidad de las imágenes obtenidas, evitando así posibles desenfoques.
+El archivo `autocapture.min.js` es un componente frontend desarrollado con Vite y Preact cuyo objetivo es facilitar la captura automática de imágenes de documentos mediante la cámara del dispositivo.
+
+El componente permite:
+
+- Detectar la presencia de un documento dentro del área de captura.
+- Guiar al usuario durante el proceso de captura.
+- Validar condiciones básicas de calidad de imagen durante la captura.
+- Obtener imágenes del documento capturado.
+- Reportar errores ocurridos durante el proceso.
+
+El componente retorna al integrador la imagen obtenida mediante eventos `window.postMessage`, permitiendo que la aplicación que lo integra gestione posteriormente el procesamiento requerido.
+
+---
+
+### Alcance del componente
+
+`autocapture.min.js` únicamente es responsable del proceso de captura de imágenes del documento.
+
+El componente **no realiza directamente**:
+
+- Verificación de identidad.
+- Validación del documento contra servicios externos.
+- Procesamiento de OCR posterior.
+- Evaluación de autenticidad del documento.
+- Aprobación o rechazo de una identidad.
+
+Para realizar procesos adicionales como validación de documentos de identidad, las imágenes obtenidas deben enviarse posteriormente a los servicios correspondientes mediante las APIs disponibles en **SUMA**.
 
 ## <a id="requirements"></a>2. Requisitos Previos
 
@@ -35,6 +61,8 @@ Esto te permitirá ejecutar el proyecto en un servidor local, lo cual es necesar
 > [!IMPORTANT]
 >
 > Esta configuración específica (`localhost:3000`) garantiza el correcto funcionamiento de los componentes en versiones antiguas.
+
+---
 
 ### 2.2. Para la versión 7.0.0
 
@@ -54,6 +82,8 @@ Es necesario utilizar un servidor que permita servir archivos `.wasm` con el tip
 
 ## <a id="integration"></a>3. Integración
 
+### 3.1. Recursos necesarios
+
 Para integrar `autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos:
 
 1. Descarga `autocapture.min.js` desde el último release publicado.
@@ -62,7 +92,29 @@ Para integrar `autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos
 
 3. Coloca `autocapture.min.js` y la carpeta `dot-assets` en una carpeta llamada "assets" en la raíz de tu proyecto.
 
-4. Agrega el siguiente código al archivo HTML donde deseas incluir el componente de autocaptura:
+> [!NOTE]
+>
+> La carpeta `assets` utilizada en los ejemplos es únicamente una referencia para la organización del proyecto. Puedes alojar los archivos en cualquier ubicación, siempre que las rutas configuradas en tu aplicación sean correctas.
+
+---
+
+### 3.2. Autenticación
+
+El componente `autocapture.min.js` no requiere un token de autenticación para ejecutarse en el navegador.
+
+Su funcionamiento es completamente local durante el proceso de captura y únicamente devuelve las imágenes obtenidas mediante eventos.
+
+Si la aplicación necesita realizar procesos posteriores, como validación de documentos de identidad, la autenticación o credenciales necesarias corresponden exclusivamente a los servicios externos consumidos por la aplicación integradora.
+
+> [!IMPORTANT]
+>
+> `autocapture.min.js` no realiza validaciones contra servicios externos ni consume APIs de verificación de identidad. Su única responsabilidad es la captura guiada del documento.
+
+---
+
+### 3.3. Integración básica
+
+Una vez disponibles los archivos requeridos, agrega el componente al documento HTML.
 
 ```html
 <!DOCTYPE html>
@@ -72,7 +124,11 @@ Para integrar `autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document Autocapture JS</title>
     <!--Carga del archivo Javascript que contiene el componente de autocaptura-->
-    <script type="module" crossorigin src="./assets/js/autocapture.min.js"></script>
+    <script
+      type="module"
+      crossorigin
+      src="./assets/js/autocapture.min.js"
+    ></script>
   </head>
   <body>
     <!--Contenedor donde se mostrará el componente de autocaptura-->
@@ -102,9 +158,24 @@ Para integrar `autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos
 </html>
 ```
 
-> [!NOTE]
->
-> La carpeta "assets" es solo una referencia para la organización del proyecto. El archivo puede estar en cualquier ubicación junto con el HTML.
+---
+
+### 3.4. Flujo posterior a la captura
+
+Una vez completada la captura, el componente envía el resultado mediante el evento `message`.
+
+```js
+window.addEventListener("message", function (event) {
+  if (event.data.image) console.log(image);
+  if (event.data.error) console.error(event.data.error);
+});
+```
+
+La propiedad `event.data.image` contiene la imagen generada durante la captura.
+
+A partir de este momento, corresponde a la aplicación integradora decidir cómo utilizar la imagen obtenida. Enviando a las APIs de **[SUMA](https://documenter.getpostman.com/view/13807324/UVXgNJ4f#f21f8454-b025-47cb-b320-2154d044dcc0)** para su procesamiento.
+
+---
 
 ## <a id="language"></a>Nueva Característica de Idioma ⚙️
 
@@ -127,6 +198,8 @@ A partir de la versión 5.2.9, se ha agregado una nueva característica que perm
 
 3. **Idioma por Defecto**:
    Si no se incluye el atributo `data-language`, el idioma predeterminado será español (`es`). Es importante añadir explícitamente este atributo para asegurar que las instrucciones se muestren en el idioma deseado.
+
+---
 
 ### Ejemplo de Implementación
 
@@ -151,9 +224,7 @@ Si prefieres las instrucciones en español, puedes omitir el atributo o especifi
 > ### Notas importantes 📢
 >
 > - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de utilizar únicamente estos valores.
->
 > - **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
->
 > - **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
 
 ## <a id="testing"></a>4. Pruebas
@@ -179,6 +250,8 @@ Para probar `autocapture.min.js` en el proyecto de prueba proporcionado por SUMA
 >
 > El uso de `localhost:3000` es obligatorio en versiones anteriores debido a restricciones de CORS.
 > Cambiar el puerto o el host podría generar errores de origen cruzado.
+
+---
 
 ### 4.2. Para la versión 7.0.0
 
@@ -222,6 +295,14 @@ Recuerda que autocapture.min.js es una versión compilada y minificada del códi
 Esperamos que esta documentación te sea útil para integrar y probar el componente de autocaptura de documentos en tu proyecto. Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.
 
 ## <a id="changelog"></a>7. Registro de cambios
+
+### 7.0.0 - 31/07/2026
+
+#### Cambios
+
+- Se agregó aclaración del alcance de `autocapture.min.js`.
+- Se especificó que el componente únicamente realiza captura de documentos y entrega imágenes mediante eventos.
+- Se agregó referencia al flujo posterior a la captura para evitar confusión entre captura y validación.
 
 ### 7.0.0 - 28/04/2025
 
