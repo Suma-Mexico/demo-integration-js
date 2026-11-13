@@ -1,18 +1,20 @@
 # Integración y Pruebas de face_autocapture.min.js
 
-**Índice**
+**Versión del componente: 7.1.0**
+
+## Índice
 
 1. [Descripción](#description)
 2. [Requisitos previos](#requirements)
 3. [Integración](#integration)
 4. [Pruebas](#testing)
-5. [Nota Importante](#notice)
+5. [Nota importante](#notice)
 6. [Conclusiones](#conclusions)
 7. [Registro de cambios](#changelog)
 
 > [!NOTE]
 >
-> Desde la versión 5.2.9 se agrego la traducción ingles y español para las instrucciones en el proceso de autocaptura.
+> Desde la versión 5.2.9 se incorporó la traducción al inglés y español para las instrucciones durante el proceso de autocaptura.
 > [Ver detalles](#language)
 
 ## <a id="description"></a>1. Descripción
@@ -22,20 +24,20 @@ El archivo `face_autocapture.min.js` es un componente frontend desarrollado con 
 El componente permite:
 
 - Detectar un rostro durante el proceso de captura.
-- Guiar al usuario mediante un flujo.
+- Guiar al usuario mediante instrucciones durante el proceso.
 - Validar las condiciones necesarias para obtener una captura adecuada.
 - Obtener la imagen del rostro capturado.
 - Reportar errores ocurridos durante el proceso.
 
-Durante la prueba de vida activa, el usuario deberá acercar su iris a la cámara cuando el componente lo indique, con el fin de comprobar que la captura está siendo realizada por una persona presente durante el proceso.
+Durante la prueba de vida activa, el usuario deberá acercar su iris a la cámara cuando el componente lo indique, con el fin de realizar el desafío correspondiente y comprobar la presencia del usuario durante el proceso de captura.
 
-El componente devuelve el resultado de la captura mediante eventos para que la aplicación integradora gestione el procesamiento posterior que requiera.
+El componente devuelve el resultado de la captura mediante eventos `window.postMessage`, permitiendo que la aplicación integradora gestione el procesamiento posterior que requiera.
 
 ---
 
 ### Alcance del componente
 
-`face_autocapture.min.js` únicamente es responsable de la captura guiada del rostro y de la ejecución del flujo de prueba de vida activa necesario para obtener la imagen.
+`face_autocapture.min.js` es responsable de la captura guiada del rostro y de la ejecución del flujo de prueba de vida activa mediante el desafío de acercamiento del iris.
 
 El componente **no realiza directamente**:
 
@@ -45,15 +47,15 @@ El componente **no realiza directamente**:
 - Autenticación de usuarios.
 - Aprobación o rechazo de una identidad.
 
-Si la aplicación requiere realizar procesos de verificación de identidad, la imagen obtenida deberá enviarse posteriormente al servicio correspondiente mediante las APIs disponibles en **SUMA**.
+Si la aplicación requiere realizar procesos adicionales de verificación de identidad, la imagen obtenida deberá enviarse posteriormente al servicio correspondiente mediante las APIs disponibles en **SUMA**.
 
-## <a id="requirements"></a>2. Requisitos Previos
+## <a id="requirements"></a>2. Requisitos previos
 
 ### 2.1. Para versiones anteriores a 7.0.0
 
 Antes de integrar y probar `face_autocapture.min.js`, asegúrate de tener instalada la extensión **Live Server** en Visual Studio Code.
 
-Esto te permitirá ejecutar el proyecto en un servidor local, lo cual es necesario debido a restricciones CORS en versiones anteriores.
+Esto permite ejecutar el proyecto mediante un servidor HTTP local, necesario debido a las restricciones CORS utilizadas en versiones anteriores.
 
 **Configuración requerida:**
 
@@ -62,25 +64,30 @@ Esto te permitirá ejecutar el proyecto en un servidor local, lo cual es necesar
 
 > [!IMPORTANT]
 >
-> Esta configuración específica (`localhost:3000`) garantiza el correcto funcionamiento de los componentes en versiones antiguas.
+> Esta configuración específica (`localhost:3000`) aplica a las versiones anteriores a 7.0.0. Cambiar el puerto o el host puede generar errores de origen cruzado.
 
 ---
 
-### 2.2. Para la versión 7.0.0
+### 2.2. Para versiones 7.0.0 y superiores
 
-Con la nueva versión `7.0.0`, ya no es necesario configurar Live Server en un puerto o host específico. Puedes utilizar cualquier puerto disponible en tu entorno de desarrollo.
+A partir de la versión 7.0.0 cambió el mecanismo de distribución de los recursos necesarios para inicializar y ejecutar el componente.
 
-Es necesario utilizar un servidor que permita servir archivos `.wasm` con el tipo MIME adecuado. Recomendamos utilizar [serve](https://www.npmjs.com/package/serve), una herramienta ligera y rápida.
+Ahora se proporciona una carpeta denominada `dot-assets`, que contiene los recursos adicionales utilizados durante el proceso de autocaptura, incluyendo archivos JavaScript y WASM.
 
-**Lo esencial es asegurarse de:**
+Para estas versiones ya no es necesario utilizar un puerto o host específico. Sin embargo, es necesario utilizar un servidor HTTP local que permita servir correctamente los recursos estáticos.
 
+**Requisitos:**
+
+- Tener instalado Node.js y npm.
+- Disponer del archivo JavaScript compilado proporcionado en el release.
 - Alojar correctamente la carpeta `dot-assets`.
-- Alojar correctamente los archivos `.js` provistos en el release.
-- No modificar ni alterar el contenido de `dot-assets`.
+- Mantener intacto el contenido de `dot-assets`.
+
+Para ejecutar los ejemplos se recomienda utilizar `http-server`.
 
 > [!IMPORTANT]
 >
-> Al alojar localmente todos los recursos, se eliminan las restricciones de origen cruzado (CORS) y se garantiza una carga estable de los componentes.
+> La carpeta `dot-assets` y su contenido no deben modificarse ni alterarse. Cualquier modificación podría afectar el correcto funcionamiento del componente.
 
 ## <a id="integration"></a>3. Integración
 
@@ -88,15 +95,27 @@ Es necesario utilizar un servidor que permita servir archivos `.wasm` con el tip
 
 Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos pasos:
 
-1. Descarga `face_autocapture.min.js` pdesde el último release publicado.
+1. Descarga `face_autocapture.min.js` desde el release correspondiente.
+2. Descarga la carpeta `dot-assets` incluida en el mismo release.
+3. Coloca ambos recursos dentro de tu proyecto, respetando las rutas utilizadas para su inicialización.
 
-2. Descarga la carpeta `dot-assets` desde el último release publicado.
+Ejemplo de estructura:
 
-3. Coloca `face_autocapture.min.js` y la carpeta `dot-assets` en una carpeta llamada "assets" en la raíz de tu proyecto.
+```text
+proyecto/
+├── assets/
+│   └── js/
+│       └── face_autocapture.min.js
+├── dot-assets/
+│   ├── face/
+│   ├── magnifeye/
+│   └── wasm/
+└── index.html
+```
 
 > [!NOTE]
 >
-> La carpeta `assets` utilizada en los ejemplos es únicamente una referencia para la organización del proyecto. Puedes alojar los archivos en cualquier ubicación, siempre que las rutas configuradas en tu aplicación sean correctas.
+> La estructura mostrada es únicamente una referencia. Puedes organizar los archivos en otras ubicaciones siempre que las rutas utilizadas por el componente sean correctas y los recursos de `dot-assets` permanezcan accesibles desde el mismo origen.
 
 ---
 
@@ -104,13 +123,13 @@ Para integrar `face_autocapture.min.js` en cualquier proyecto HTML, sigue estos 
 
 El componente `face_autocapture.min.js` no requiere un token de autenticación para ejecutarse en el navegador.
 
-Su funcionamiento es completamente local durante el proceso de captura y únicamente devuelve las imágenes obtenidas mediante eventos.
+Su funcionamiento durante el proceso de captura no requiere autenticación contra las APIs de verificación de identidad de SUMA.
 
-Si la aplicación necesita realizar procesos posteriores, como validación de documentos de identidad, la autenticación o credenciales necesarias corresponden exclusivamente a los servicios externos consumidos por la aplicación integradora.
+Si la aplicación necesita realizar procesos posteriores, como la verificación de identidad, la autenticación o las credenciales necesarias corresponden exclusivamente a los servicios externos consumidos por la aplicación integradora.
 
 > [!IMPORTANT]
 >
-> `face_autocapture.min.js` no realiza validaciones contra servicios externos ni consume APIs de verificación de identidad. Su única responsabilidad es la captura guiada del rostro.
+> `face_autocapture.min.js` no realiza validaciones contra servicios externos ni consume APIs de verificación de identidad. Su responsabilidad es la captura guiada del rostro y la ejecución del desafío de prueba de vida activa.
 
 ---
 
@@ -125,34 +144,39 @@ Una vez disponibles los archivos requeridos, agrega el componente al documento H
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Face Autocapture JS</title>
-    <!--Carga del archivo Javascript que contiene el componente de autocaptura-->
+
+    <!-- Carga del archivo JavaScript que contiene el componente de autocaptura -->
     <script
       type="module"
       crossorigin
       src="./assets/js/face_autocapture.min.js"
     ></script>
   </head>
+
   <body>
-    <!--Contenedor donde se mostrará el componente de autocaptura-->
-    <div>
-      <div id="face_autocapture"></div>
-    </div>
+    <!-- Contenedor donde se mostrará el componente de autocaptura -->
+    <div id="face_autocapture"></div>
 
-    <!-- Script que escucha el evento "message" -->
+    <!-- Script que escucha el evento message -->
     <script type="module">
-      // Cuando se recibe un mensaje del componente de autocaptura...
       window.addEventListener("message", function (event) {
-        // Se extraen las propiedades "image" y "error" del mensaje
-        let image = event.data.image;
-        let error = event.data.error;
+        // Se extraen las propiedades image y error del mensaje
+        const image = event.data.image;
+        const error = event.data.error;
 
-        // Si se recibió una imagen, se muestra un console log con la imagen resultante
-        if (image) console.log(image);
+        // Si se recibió una imagen, se muestra en consola
+        if (image) {
+          console.log("Imagen capturada:", image);
+        }
 
-        // Si se recibió un error, se muestra un console log con el nombre y mensaje del error
+        // Si se recibió un error, se muestra su nombre y mensaje
         if (error) {
-          const getError = { name: error.name, message: error.message };
-          console.log(getError);
+          const getError = {
+            name: error.name,
+            message: error.message,
+          };
+
+          console.error(getError);
         }
       });
     </script>
@@ -164,68 +188,76 @@ Una vez disponibles los archivos requeridos, agrega el componente al documento H
 
 ### 3.4. Flujo posterior a la captura
 
-Una vez completada la captura, el componente envía el resultado mediante el evento `message`.
+Una vez completado el proceso, el componente envía el resultado mediante el evento `message`.
 
-```js
+```javascript
 window.addEventListener("message", function (event) {
-  if (event.data.image) console.log(image);
-  if (event.data.error) console.error(event.data.error);
+  if (event.data.image) {
+    console.log("Imagen capturada:", event.data.image);
+  }
+
+  if (event.data.error) {
+    console.error("Error durante la captura:", event.data.error);
+  }
 });
 ```
 
-La propiedad `event.data.image` contiene la imagen generada durante la captura.
+La propiedad `event.data.image` contiene la imagen del rostro obtenida durante el proceso de captura.
 
-A partir de este momento, corresponde a la aplicación integradora decidir cómo utilizar la imagen obtenida. Enviando a las APIs de **[SUMA](https://documenter.getpostman.com/view/13807324/UVXgNJ4f#f21f8454-b025-47cb-b320-2154d044dcc0)** para su procesamiento.
+A partir de este momento, corresponde a la aplicación integradora decidir cómo utilizar la imagen obtenida, por ejemplo, enviándola a las APIs de **[SUMA](https://documenter.getpostman.com/view/13807324/UVXgNJ4f#f21f8454-b025-47cb-b320-2154d044dcc0)** para su procesamiento.
 
----
+## <a id="language"></a>Nueva característica de idioma
 
-## <a id="language"></a>Nueva Característica de Idioma ⚙️
+A partir de la versión 5.2.9 se incorporó una característica que permite mostrar las instrucciones de autocaptura en español o inglés.
 
-A partir de la versión 5.2.9, se ha agregado una nueva característica que permite mostrar las instrucciones en español o inglés. Para aprovechar esta funcionalidad, es necesario integrar el archivo JavaScript correspondiente a esta versión y configurar el idioma deseado mediante el atributo `data-language` en el componente de autocaptura.
+Para utilizar esta funcionalidad, es necesario integrar el archivo JavaScript correspondiente a la versión 5.2.9 o superior y configurar el idioma mediante el atributo `data-language`.
 
-### Instrucciones para Implementar la Nueva Característica
+### Instrucciones de implementación
 
-1. **Integración del Archivo JavaScript**:
-   Asegúrate de incluir el archivo JavaScript de la versión 5.2.9 o superior en tu proyecto. Este archivo contiene las actualizaciones necesarias para habilitar la traducción de instrucciones.
+**1. Integración del archivo JavaScript**
 
-2. **Configuración del Idioma**:
-   Utiliza el atributo `data-language` en el componente de autocaptura para especificar el idioma de las instrucciones. Solo se permiten dos opciones: `es` para español y `en` para inglés.
+Asegúrate de incluir el archivo JavaScript de la versión 5.2.9 o superior en tu proyecto.
 
-   ```html
-   <!-- Contenedor donde se mostrará el componente de autocaptura -->
-   <div>
-     <div id="face_autocapture" data-language="en"></div>
-   </div>
-   ```
+**2. Configuración del idioma**
 
-3. **Idioma por Defecto**:
-   Si no se incluye el atributo `data-language`, el idioma predeterminado será español (`es`). Es importante añadir explícitamente este atributo para asegurar que las instrucciones se muestren en el idioma deseado.
+Utiliza el atributo `data-language` en el contenedor del componente para especificar el idioma de las instrucciones.
 
-#### Ejemplo de Implementación
+Actualmente se permiten dos valores:
 
-Para mostrar las instrucciones en inglés, asegúrate de agregar `data-language="en"` como se muestra a continuación:
+- `es`: español.
+- `en`: inglés.
+
+Ejemplo:
 
 ```html
-<!-- Contenedor donde se mostrará el componente de autocaptura -->
-<div>
-  <div id="face_autocapture" data-language="en"></div>
-</div>
+<div id="face_autocapture" data-language="en"></div>
 ```
 
-Si prefieres las instrucciones en español, puedes omitir el atributo o especificar `data-language="es"`:
+**3. Idioma por defecto**
+
+Si no se incluye el atributo `data-language`, el idioma predeterminado será español (`es`).
+
+### Ejemplo de implementación
+
+Para mostrar las instrucciones en inglés:
 
 ```html
-<!-- Contenedor donde se mostrará el componente de autocaptura -->
-<div>
-  <div id="face_autocapture" data-language="es"></div>
-</div>
+<div id="face_autocapture" data-language="en"></div>
 ```
 
-> ### Notas importantes 📢
+Para mostrar las instrucciones en español:
+
+```html
+<div id="face_autocapture" data-language="es"></div>
+```
+
+También puedes omitir el atributo para utilizar el idioma predeterminado.
+
+> [!NOTE]
 >
-> - **Compatibilidad de Idiomas**: Actualmente, solo se admiten los idiomas español (`es`) e inglés (`en`). Asegúrate de utilizar únicamente estos valores.
-> - **Actualización Obligatoria**: Es imprescindible actualizar al archivo JavaScript de la versión 5.2.9 o superior para que la funcionalidad de selección de idioma funcione correctamente.
-> - **Importancia del Atributo `data-language`**: Para observar el cambio de idioma, es fundamental agregar el atributo `data-language` al componente de autocaptura. La omisión de este atributo resultará en la visualización de las instrucciones en el idioma por defecto (español).
+> - Actualmente solo se admiten español (`es`) e inglés (`en`).
+> - Es necesario utilizar una versión 5.2.9 o superior del archivo JavaScript.
+> - El atributo `data-language` debe configurarse en el contenedor del componente.
 
 ## <a id="testing"></a>4. Pruebas
 
@@ -234,98 +266,133 @@ Si prefieres las instrucciones en español, puedes omitir el atributo o especifi
 Para probar `face_autocapture.min.js` en el proyecto de prueba proporcionado por SUMA México, sigue estos pasos:
 
 1. Abre Visual Studio Code y asegúrate de tener instalada la extensión Live Server.
+2. Abre el proyecto y haz clic derecho en el archivo `index.html`.
+3. Selecciona **Open with Live Server**.
+4. Configura Live Server con los siguientes valores:
+   - Puerto: `3000`.
+   - Host: `localhost`.
 
-2. Abre el proyecto y haz clic derecho en el archivo index.html, selecciona "Open with Live Server".
+5. Abre el navegador en la dirección:
 
-3. Configura Live Server para usar:
+   `http://localhost:3000`
 
-- Puerto: 3000
-- Host: localhost
-
-4. Abre el navegador en la dirección: http://localhost:3000.
-
-5. Verás el componente de autocaptura funcionando. Podrás capturar imágenes y validar el flujo completo.
+6. Verifica que el componente se inicialice correctamente y permita completar el flujo de captura facial con el desafío de acercamiento del iris.
 
 > [!NOTE]
 >
-> El uso de `localhost:3000` es obligatorio en versiones anteriores debido a restricciones de CORS.
-> Cambiar el puerto o el host podría generar errores de origen cruzado.
+> El uso de `localhost:3000` es obligatorio para las versiones anteriores debido a las restricciones CORS. Cambiar el puerto o el host puede generar errores de origen cruzado.
 
 ---
 
-### 4.2. Para la versión 7.0.0
+### 4.2. Para versiones 7.0.0 y superiores
 
-A partir de la versión 7.0.0. No es necesario usar un puerto o host específico. Puedes ejecutar el proyecto en cualquier puerto disponible sin problemas de CORS.
+A partir de la versión 7.0.0 se modificó el mecanismo de carga de recursos, por lo que ya no es necesario utilizar un puerto o host específico.
 
-Para las pruebas recomendamos el uso de `serve`, un servidor que permite cargar los archivos `.wasm` con tipo MIME `application/wasm` y asegurar el correcto funcionamiento de los componentes.
+Para ejecutar el proyecto se recomienda utilizar `http-server`, un servidor HTTP ligero que permite servir correctamente los archivos estáticos y los recursos necesarios para el funcionamiento de los componentes.
+
+#### Requisitos
+
+Tener Node.js y npm instalados en el equipo.
+
+#### Ejecución del servidor local
+
+1. Abre una terminal en la raíz del proyecto donde se encuentra el archivo `index.html` y la carpeta `dot-assets`.
+
+2. Ejecuta el siguiente comando:
+
+```bash
+npx http-server . -p 3000 -c-1
+```
+
+3. Una vez iniciado el servidor, accede desde el navegador a:
+
+```text
+http://localhost:3000
+```
+
+**Descripción de los parámetros:**
+
+- `.`: establece el directorio actual como raíz del servidor.
+- `-p 3000`: establece el puerto de ejecución.
+- `-c-1`: deshabilita la caché HTTP para evitar utilizar versiones anteriores de los recursos durante las pruebas.
+
+> [!IMPORTANT]
+>
+> Ejecuta el servidor desde el directorio que contiene el archivo `index.html` y la carpeta `dot-assets`. De esta manera, los recursos solicitados por el componente estarán disponibles desde la raíz del servidor.
+
+#### Consideraciones adicionales
+
+- Mantener los archivos JavaScript en las rutas correspondientes.
+- Mantener la carpeta `dot-assets` completa y sin modificaciones.
+- No cambiar las rutas de los recursos internos proporcionados en el release.
+- Verificar que los archivos adicionales solicitados por el componente estén disponibles desde el mismo origen.
 
 > [!WARNING]
 >
-> Herramientas como "Live Server" pueden no configurarlo automáticamente, lo que provoca errores de carga.
+> Si utilizas Live Server u otro servidor de desarrollo, verifica que sirva correctamente los archivos JavaScript, Web Workers y WASM. Una configuración incorrecta puede provocar errores de carga o respuestas con tipos MIME no compatibles.
 
-#### Instalación y uso
+### Pruebas con otros puertos o hosts
 
-No es necesario instalar nada permanentemente. Solo abre tu terminal en la raíz del proyecto y ejecuta:
+- Para versiones anteriores a 7.0.0, cualquier cambio de puerto o host respecto a la configuración establecida (`localhost:3000`) debe consultarse con el equipo de soporte técnico, debido a las restricciones CORS.
+- Para versiones 7.0.0 o superiores, no existen restricciones específicas de puerto o dominio por parte del mecanismo de distribución local. Sin embargo, todos los recursos necesarios deben servirse correctamente desde el mismo origen.
 
-```bash
-npx serve .
-```
+## <a id="notice"></a>5. Nota importante
 
-Esto iniciará un servidor local y te proporcionará una URL (por ejemplo, `http://localhost:3000`) donde podrás acceder a tu proyecto.
+Recuerda que `face_autocapture.min.js` es una versión compilada y minificada del código fuente original.
 
-Solo asegúrate de:
+La versión 7.1.0 incorpora una actualización de los paquetes internos utilizados por el componente antes de su compilación, manteniendo el mecanismo de integración y el flujo de captura con desafío de prueba de vida activa introducidos en versiones anteriores.
 
-- Alojar correctamente los archivos `.js`.
-- Mantener la carpeta `dot-assets/` intacta y accesible.
-
-Con esta nueva versión, los componentes funcionan de manera local eliminando la necesidad de configuraciones especiales de servidor.
-
-## Pruebas con Otros Puertos o Hosts
-
-- En versiones anteriores a 7.0.0, cambiar el puerto o el host puede causar fallos. Cualquier cambio de puerto o host diferente al predeterminado (`3000 y localhost`), se debe comunicarte con el equipo de soporte técnico para obtener asistencia.
-
-- En versiones 7.0.0 o superiores, no existen restricciones en el puerto o dominio de ejecución.
-
-## <a id="notice"></a>📢 5. Nota Importante
-
-Recuerda que face_autocapture.min.js es una versión compilada y minificada del código fuente original. Si necesitas realizar modificaciones o agregar nuevas funcionalidades, contacta al equipo de soporte técnico de SUMA México.
+Si necesitas realizar modificaciones o agregar nuevas funcionalidades, contacta al equipo de soporte técnico de SUMA México.
 
 ## <a id="conclusions"></a>6. Conclusiones
 
-Esperamos que esta documentación te sea útil para integrar y probar el componente de autocaptura de rostros en tu proyecto. Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.
+Esperamos que esta documentación facilite la integración y ejecución del componente de autocaptura facial en tu proyecto.
 
-## <a id="changelog"></a>Registro de cambios
+Para garantizar su correcto funcionamiento, utiliza los archivos correspondientes al release seleccionado y conserva íntegra la estructura de recursos proporcionada.
 
-### 7.0.0 - 31/07/2026
+Si tienes alguna pregunta o necesitas información adicional, contacta al equipo de soporte técnico de SUMA México.
+
+## <a id="changelog"></a>7. Registro de cambios
+
+### 7.1.0 - 13/11/2026
 
 #### Cambios
 
-- Se agregó aclaración del alcance de `face_autocapture.min.js`.
-- Se especificó que el componente únicamente realiza captura del rostro y entrega la imagen obtenida mediante eventos.
-- Se agregó referencia al flujo posterior a la captura para evitar confusión entre captura y validación.
+- Actualización de los paquetes internos utilizados por el componente antes de su compilación.
+- Actualización y mejora de la documentación de integración y pruebas.
+- Actualización de las instrucciones para ejecutar el componente mediante `http-server`.
+- Inclusión de recomendaciones para la carga correcta de los recursos JavaScript, Web Workers y WASM.
+
+### 7.0.0 - 31/07/2026
+
+#### Documentación
+
+- Se agregó una aclaración sobre el alcance de `face_autocapture.min.js`.
+- Se especificó que el componente únicamente realiza la captura guiada del rostro y el desafío de prueba de vida activa.
+- Se agregó una referencia al flujo posterior a la captura para evitar confusiones entre captura y validación.
 
 ### 7.0.0 - 28/04/2025
 
 #### Cambios
 
 - Mejora en la detección de rostros.
-- Cambio en la forma de alojar los archivos esenciales para la inicialización de los componente de autocaptura.
+- Cambio en la forma de alojar los archivos esenciales para la inicialización del componente de autocaptura.
 
 #### Correcciones
 
-- Reinicio involuntario de componentes al enfocar.
+- Corrección de reinicios involuntarios del componente al enfocar.
 
 ### 6.2.0 - 28/11/2024
 
 #### Cambios
 
-- Detección mejorada del tamaño de la cara.
-- Mejora de las medidas de seguridad y una mayor protección contra las vulnerabilidades.
+- Mejora en la detección del tamaño del rostro.
+- Mejoras en las medidas de seguridad y protección contra vulnerabilidades.
 
 #### Correcciones
 
-- Solicitud de permiso de cámara innecesaria al tomar la foto.
-- Inicialización de la cámara en iOS, cuando se utilizan varios componentes en la misma página.
-- Error al cambiar entre cámaras en dispositivos Android.
-- Imagen incorrecta en la llamada de retorno onPhotoTaken.
-- Corrección de la sobreescritura de la imagen central por la última.
+- Corrección de la solicitud innecesaria de permisos de cámara al tomar la fotografía.
+- Corrección de la inicialización de la cámara en iOS cuando se utilizan varios componentes en la misma página.
+- Corrección de errores al cambiar entre cámaras en dispositivos Android.
+- Corrección de la imagen devuelta mediante el callback `onPhotoTaken`.
+- Corrección de la sobreescritura de la imagen central por la última imagen capturada.
