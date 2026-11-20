@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,7 +16,13 @@
     </div>
     <footer style="bottom: 30px">
       <h3>Prueba de autocaptura del rostro</h3>
-      <p>Suma Mexico 2025 | VDID SDK V7.0.0</p>
+      <p>
+        Suma Mexico
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        | VDID SDK V8.0.0
+      </p>
     </footer>
 
     <script>
@@ -38,7 +44,9 @@
       } else {
         // Si no existe una imagen almacenada, se muestra un mensaje de error
         const p = document.createElement("p");
-        const content = document.createTextNode("Hubo un error al obtener los datos");
+        const content = document.createTextNode(
+          "Hubo un error al obtener los datos",
+        );
         p.appendChild(content);
         contentImages.appendChild(p);
       }

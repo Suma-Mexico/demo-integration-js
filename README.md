@@ -1,27 +1,39 @@
 # Demo de integración de componentes en JavaScript
 
-Este repositorio contiene ejemplos de integración de los componentes de autocaptura de documentos y rostro, distribuidos mediante archivos JavaScript compilados para su implementación en proyectos Vanilla JavaScript.
+Este repositorio contiene ejemplos de integración de los componentes de autocaptura de documentos y rostro, distribuidos mediante archivos JavaScript compilados para su implementación en proyectos **Vanilla JavaScript**.
 
-**Versión de la integración: 7.1.0**
+**Versión de la integración: 8.0.0**
 
 ## Componentes disponibles
 
 - **id-autocapture:** captura automática de documentos de identidad (frente y reverso).
-- **face-autocapture:** captura facial con desafío de prueba de vida mediante acercamiento del iris.
-- **face-autocapture-camera:** captura automática del rostro mediante cámara, sin desafío de prueba de vida.
+- **face-autocapture:** captura automática del rostro mediante cámara, sin desafío de prueba de vida.
+- **face-autocapture-iris-challenge:** captura facial con desafío de prueba de vida basado en el acercamiento del iris.
+- **face-autocapture-multirange-challenge:** captura facial con desafíos de prueba de vida mediante diferentes rangos de acercamiento del rostro.
 
-## 📢 Información importante
+## Información importante
 
-A partir de la versión 7.0.0, el proceso de integración de los componentes cambió para mejorar la estabilidad, seguridad y simplicidad del despliegue.
+A partir de la versión **7.0.0**, se modificó el proceso de integración de los componentes para mejorar la estabilidad, seguridad y simplicidad del despliegue, incorporando la distribución local de los recursos necesarios para su funcionamiento.
+
+Con la versión **8.0.0** se introdujeron nuevas actualizaciones y mejoras en la integración, incluyendo cambios en la estructura y organización de los archivos, así como la incorporación de nuevos componentes de captura facial.
+
+### Novedades de la versión 8.0.0
+
+Los principales cambios de esta versión son:
+
+- **Actualización de la estructura de archivos:** se reorganizaron los archivos y directorios de distribución para facilitar la integración y el mantenimiento de los componentes.
+- **Nuevo componente de captura facial:** se incorporó `face-autocapture-multirange-challenge`, que permite realizar desafíos de prueba de vida mediante diferentes rangos de acercamiento del rostro.
+- **Actualización de los componentes existentes:** se incluyen mejoras y actualizaciones en los componentes disponibles.
+- **Estandarización de la distribución:** se mantiene el esquema de archivos JavaScript compilados y recursos locales necesarios para ejecutar cada componente.
 
 ### Nueva forma de distribución
 
-Cada componente incluye:
+Cada componente incluye los archivos necesarios para su inicialización y funcionamiento:
 
-- Un archivo JavaScript compilado (`.min.js`) que permite inicializar e integrar el componente.
-- Una carpeta `dot-assets` con los recursos necesarios para su funcionamiento, incluyendo archivos JavaScript adicionales y recursos WASM.
+- Un archivo JavaScript compilado (`.min.js`), encargado de inicializar e integrar el componente.
+- Una carpeta `dot-assets`, que contiene los recursos adicionales necesarios para su funcionamiento, incluyendo archivos JavaScript, Web Workers y recursos WASM.
 
-**La carpeta `dot-assets` y su contenido no deben modificarse ni alterarse.** Cualquier modificación podría afectar el correcto funcionamiento de los componentes.
+**Importante:** La carpeta `dot-assets` y su contenido no deben modificarse ni alterarse. Cualquier modificación podría afectar el correcto funcionamiento de los componentes.
 
 ### ¿Por qué alojar los recursos localmente?
 
@@ -38,19 +50,23 @@ La distribución local permite:
 
 Para integrar cualquiera de los componentes, es necesario copiar y alojar localmente los archivos JavaScript compilados y la carpeta `dot-assets` correspondiente.
 
-Los recursos deben mantenerse dentro del mismo origen desde el que se ejecuta la aplicación.
+Se deben considerar los siguientes aspectos:
 
-No se debe modificar el contenido de `dot-assets` ni alojarlo en un servidor externo diferente al de los scripts.
+- Los recursos deben mantenerse dentro del mismo origen desde el que se ejecuta la aplicación.
+- La carpeta `dot-assets` debe conservar su estructura y contenido originales.
+- No se debe alojar la carpeta `dot-assets` en un servidor externo diferente al utilizado para servir los scripts.
+- Cada componente debe utilizar los recursos correspondientes a su propia distribución y versión.
 
 **Nota:** Estas indicaciones de distribución local aplican a partir de la versión 7.0.0. Las versiones anteriores mantienen su mecanismo de integración mediante CORS y requieren solicitar acceso para utilizar los componentes.
 
 ## Ejemplos de integración
 
-Consulta la documentación y los ejemplos de cada componente:
+Consulta la documentación y los ejemplos de implementación disponibles para cada componente:
 
 - [id-autocapture](./id-autocapture/)
 - [face-autocapture](./face-autocapture/)
-- [face-autocapture-camera](./face-autocapture-camera/)
+- [face-autocapture-iris-challenge](./face-autocapture-iris-challenge/)
+- [face-autocapture-multirange-challenge](./face-autocapture-multirange-challenge/)
 
 ## Ejecución local
 

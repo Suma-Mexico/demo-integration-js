@@ -66,6 +66,8 @@ body {
 
 #content_result > img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   transform-origin: center;
   transform: scaleX(-1);
   filter: blur(1px);
@@ -164,7 +166,9 @@ footer {
   }
 
   footer {
-    bottom: -50px;
+    position: relative;
+    bottom: -20px;
     font-size: 0.6rem;
+    margin: 1rem 0;
   }
 }

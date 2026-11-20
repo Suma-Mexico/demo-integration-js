@@ -1,11 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document autocapture JS</title>
     <link rel="stylesheet" type="text/css" href="./assets/css/main.css" />
-    <script type="module" crossorigin src="./assets/js/autocapture_7.1.0.min.js"></script>
+    <script
+      type="module"
+      crossorigin
+      src="./assets/js/autocapture.min.js"
+    ></script>
   </head>
   <body>
     <div class="content_title">
@@ -15,14 +19,21 @@
       <div class="content_preview">
         <!-- Componente de autocaptura -->
         <div class="content_autocapture">
-          <div id="autocapture_documents" data-language="en"></div>
+          <div
+            id="autocapture_documents"
+            data-language="es"
+            data-license="AAEAAIZoEBuLLPHcAkih+EFOy4UJS3Yyh54xc+sNOBbesp3nwIxK5qlnml/3LDPDriiMBuFZ6lo/DJVOElI5Myx5li3FjaJHZDlYnctzOf6O6GOAKxA6x/uwlcw9482rI6zRE5KBohla+IzU92XHD+Y9p73M5LapunaZT9nxEBNUDtDp2Ru/vMGR29+FkrLP9vt2/j0ughS4WoqkbpyBgHBQoLOeisoOeA5dMYXEyTjtDlpeid7cArcjOw05v+r+Upt3zTjkiAEVsLZn/nZk2L3TmwJaiBrngey7v5zjPoc44rZpsGs2tlZzf3yLOqI/jta+Lpov8JR7bMJ+DqI6CUE+MxDkAAAAAAAAELjCFcqO+1hssWrjJ76LAXNSg2MydgN1HM9bqMImfUNRvMgEFvp7RjO08Yyl+EpiO71ouVRRGfYIljMQpN5umfSliziW7fYWuMkDcPHm1YJ9syvzeKADGfcSJDoyUOFy9l3KekaNbe37W11M5tU+/YrxRcuAqFpU6DAVesJfb2XheX+iioRnCqcHWLJJWB94OiYeg0stxri+AA5SCgvRF5pXpNda7+vuPuHYTHw24J/822ktJGMMMZyzzAFlwP/LrNaBi7M6vV8NJCFl3vptbYozmSgXdG3S4AthsB1k6yUp"
+          ></div>
         </div>
         <div id="content_result">
           <img id="capture_image" />
         </div>
         <div id="loading">
           <p><strong>Gire el documento hacia el reverso</strong></p>
-          <img src="./assets/images/rotate.svg" title="Created by Andrew Kelly" />
+          <img
+            src="./assets/images/rotate.svg"
+            title="Created by Andrew Kelly"
+          />
         </div>
       </div>
       <div class="content_progress">
@@ -35,7 +46,13 @@
     </div>
     <footer>
       <h3>Prueba de autocaptura de documentos</h3>
-      <p>Suma Mexico 2025 | VDID SDK V7.0.0</p>
+      <p>
+        Suma Mexico
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        | VDID SDK V8.0.0
+      </p>
     </footer>
 
     <!-- Script que escucha el evento "message" -->
@@ -98,7 +115,10 @@
         // nos ayude a continuar el proceso de autocaptura de documentos, es decir, capturamos el
         // frente del documento para luego mediante un botón que ejecuta la función onclick
         // continuar con la captura del reverso del documento.
-        if (window["continueDetection"] && typeof window["continueDetection"] === "function") {
+        if (
+          window["continueDetection"] &&
+          typeof window["continueDetection"] === "function"
+        ) {
           const continueBtn = document.getElementById("continue");
           continueBtn.onclick = function () {
             loading.style.display = "none";
