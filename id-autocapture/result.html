@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,12 +11,18 @@
       <p><strong>Resultados</strong></p>
     </div>
     <div id="content_images"></div>
-    <div class="content_buttons" style="display: block;">
+    <div class="content_buttons" style="display: block">
       <button type="button" onclick="retake()">Tomar de nuevo</button>
     </div>
-    <footer style="bottom: 30px;">
+    <footer style="bottom: 30px">
       <h3>Prueba de autocaptura de documentos</h3>
-      <p>Suma Mexico 2025 | VDID SDK V7.0.0</p>
+      <p>
+        Suma Mexico
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        | VDID SDK V8.0.0
+      </p>
     </footer>
 
     <script>
@@ -33,7 +39,7 @@
           imgElement.style.height = "250px";
           imgElement.style.objectFit = "cover";
           imgElement.alt = "Imagen";
-          imgElement.style.borderRadius = "10px"
+          imgElement.style.borderRadius = "10px";
           contentImages.appendChild(imgElement);
         });
       }
